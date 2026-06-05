@@ -2,15 +2,20 @@
 <html lang="ar" dir="rtl">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
     <title>M.R بوتيك - مدام ريم</title>
+    
     <!-- Firebase SDKs -->
     <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore-compat.js"></script>
+    
     <!-- Cloudinary Widget -->
     <script src="https://upload-widget.cloudinary.com/global/all.js"></script>
+    
+    <!-- Font Awesome & Google Fonts -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@300;400;500;700&display=swap" rel="stylesheet">
+    
     <style>
         * {
             margin: 0;
@@ -18,10 +23,12 @@
             box-sizing: border-box;
             font-family: 'Tajawal', sans-serif;
         }
+        
         body {
             background: linear-gradient(145deg, #fff5f0 0%, #ffe8e0 100%);
             color: #3e2a2a;
         }
+        
         .navbar {
             background: #2c1a12;
             padding: 1rem 2rem;
@@ -34,20 +41,24 @@
             top: 0;
             z-index: 100;
         }
+        
         .logo {
             font-size: 1.8rem;
             font-weight: bold;
             color: #f7c873;
         }
+        
         .logo span {
             color: #e6b17e;
             font-size: 1rem;
         }
+        
         .nav-tabs {
             display: flex;
             gap: 1rem;
             flex-wrap: wrap;
         }
+        
         .tab-btn {
             background: none;
             border: none;
@@ -59,28 +70,34 @@
             border-radius: 40px;
             transition: 0.3s;
         }
+        
         .tab-btn.active, .tab-btn:hover {
             background: #f7c873;
             color: #2c1a12;
         }
+        
         .tab-content {
             display: none;
             padding: 2rem;
             animation: fade 0.3s ease;
         }
+        
         .tab-content.active-tab {
             display: block;
         }
+        
         @keyframes fade {
             from { opacity: 0; transform: translateY(8px);}
             to { opacity: 1; transform: translateY(0);}
         }
+        
         .products-grid {
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
             gap: 2rem;
             margin-top: 1rem;
         }
+        
         .product-card {
             background: white;
             border-radius: 28px;
@@ -88,22 +105,27 @@
             box-shadow: 0 10px 25px rgba(0,0,0,0.1);
             transition: 0.2s;
         }
+        
         .product-card:hover {
             transform: translateY(-5px);
         }
+        
         .product-img {
             width: 100%;
             height: 260px;
             object-fit: cover;
         }
+        
         .product-info {
             padding: 1rem;
         }
+        
         .price {
             color: #b45f2b;
             font-size: 1.3rem;
             font-weight: bold;
         }
+        
         .book-btn {
             background: #2c1a12;
             color: #f7c873;
@@ -115,14 +137,16 @@
             cursor: pointer;
             font-weight: bold;
         }
+        
         .form-card, .admin-panel {
             background: white;
             padding: 2rem;
             border-radius: 32px;
-            max-width: 700px;
+            max-width: 800px;
             margin: 1rem auto;
             box-shadow: 0 8px 20px rgba(0,0,0,0.05);
         }
+        
         input, textarea {
             width: 100%;
             padding: 10px;
@@ -130,6 +154,7 @@
             border-radius: 50px;
             border: 1px solid #ddd;
         }
+        
         button {
             background: #b45f2b;
             color: white;
@@ -139,21 +164,25 @@
             cursor: pointer;
             font-weight: bold;
         }
+        
         .login-box {
             max-width: 400px;
             margin: 3rem auto;
             text-align: center;
         }
+        
         .logout-btn {
             background: #7a3e1a;
             margin-right: 10px;
         }
+        
         footer {
             text-align: center;
             padding: 1.5rem;
             background: #2c1a12;
             color: #dfc3a6;
         }
+        
         .offer-item {
             background: #fef2e6;
             padding: 1rem;
@@ -163,13 +192,44 @@
             justify-content: space-between;
             align-items: center;
         }
-        .admin-badge {
-            background: #f7c873;
-            color: #2c1a12;
-            padding: 5px 12px;
-            border-radius: 30px;
-            font-size: 0.8rem;
+        
+        .admin-product-card {
+            background: white;
+            border-radius: 20px;
+            margin-bottom: 20px;
+            overflow: hidden;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
         }
+        
+        .admin-product-img {
+            width: 100%;
+            height: 180px;
+            object-fit: cover;
+        }
+        
+        .admin-product-info {
+            padding: 15px;
+        }
+        
+        .admin-product-info input, 
+        .admin-product-info textarea {
+            margin-bottom: 10px;
+        }
+        
+        .btn-group {
+            display: flex;
+            gap: 10px;
+            margin-top: 10px;
+        }
+        
+        .btn-update {
+            background: #4c6a3b;
+        }
+        
+        .btn-delete {
+            background: #a13e2d;
+        }
+        
         @media (max-width: 700px) {
             .navbar { flex-direction: column; gap: 10px; }
         }
@@ -194,7 +254,7 @@
     <div id="productsContainer" class="products-grid">جاري التحميل...</div>
 </div>
 
-<!-- تبويب عن البوتيك (مع روابط التواصل ظاهرة للجميع) -->
+<!-- تبويب عن البوتيك -->
 <div id="about" class="tab-content">
     <div class="form-card">
         <h2>🌸 بوتيك M.R - مدام ريم</h2>
@@ -222,7 +282,7 @@
     </div>
 </div>
 
-<!-- تبويب العروض (ديناميكية من المدير) -->
+<!-- تبويب العروض -->
 <div id="offers" class="tab-content">
     <div class="form-card">
         <h2>🎉 عروضنا الحالية</h2>
@@ -230,7 +290,7 @@
     </div>
 </div>
 
-<!-- تبويب دخول المدير (نموذج تسجيل الدخول) -->
+<!-- تبويب دخول المدير -->
 <div id="adminLogin" class="tab-content">
     <div class="login-box form-card">
         <h2>🔐 دخول المدير</h2>
@@ -241,24 +301,33 @@
     </div>
 </div>
 
-<!-- لوحة المدير المخفية حتى تسجيل الدخول -->
+<!-- لوحة المدير -->
 <div id="adminPanel" style="display:none;">
     <div class="navbar" style="background:#4a2a1a;">
         <div class="logo">🛠️ لوحة إدارة M.R</div>
         <button id="logoutAdminBtn" class="logout-btn">🚪 تسجيل خروج</button>
     </div>
     <div style="padding:2rem">
+        
+        <!-- رفع منتج جديد -->
         <div class="admin-panel">
             <h2><i class="fas fa-upload"></i> رفع منتج جديد</h2>
             <input type="text" id="productName" placeholder="اسم المنتج" required>
             <textarea id="productDesc" placeholder="مواصفات المنتج (قماش، مقاس، لون...)" rows="2"></textarea>
             <input type="text" id="productPrice" placeholder="السعر (ل.س أو دولار)" required>
             <button id="uploadImageBtn">📸 رفع صورة إلى Cloudinary</button>
-            <p id="uploadStatus" style="font-size:0.9rem;"></p>
+            <p id="uploadStatus" style="font-size:0.9rem; margin-top:5px;"></p>
             <input type="hidden" id="imageUrlHidden">
-            <button id="saveProductBtn" style="background:#4c6a3b;">💾 حفظ المنتج</button>
+            <button id="saveProductBtn" style="background:#4c6a3b; margin-top:10px;">💾 حفظ المنتج</button>
         </div>
 
+        <!-- إدارة المنتجات (تعديل/حذف) -->
+        <div class="admin-panel">
+            <h2><i class="fas fa-edit"></i> إدارة المنتجات (تعديل / حذف)</h2>
+            <div id="adminProductsList"></div>
+        </div>
+
+        <!-- إدارة العروض -->
         <div class="admin-panel">
             <h2><i class="fas fa-tags"></i> إدارة العروض (إضافة / حذف)</h2>
             <div id="adminOffersList"></div>
@@ -268,12 +337,14 @@
             </div>
         </div>
 
+        <!-- إدارة الحجوزات -->
         <div class="admin-panel">
             <h2><i class="fas fa-calendar-check"></i> إدارة الحجوزات</h2>
             <button id="viewBookingsBtn">📋 عرض جميع الحجوزات</button>
             <div id="bookingsList" style="margin-top:15px;"></div>
         </div>
 
+        <!-- تعديل روابط التواصل -->
         <div class="admin-panel">
             <h2><i class="fas fa-link"></i> تعديل روابط التواصل الاجتماعي</h2>
             <input type="url" id="instaLink" placeholder="رابط الانستغرام">
@@ -289,10 +360,17 @@
 </footer>
 
 <script>
-        // ========== Firebase Configuration ==========
-        const CLOUD_NAME = "dogocjhft"; 
+    // ========== تعريف المتغيرات العامة ==========
+    const CLOUD_NAME = "dogocjhft";
     const UPLOAD_PRESET = "MR-POTIC";
-
+    
+    const ADMIN_EMAIL = "ahamdo64@gmail.com";
+    const ADMIN_PASSWORD = "12345678";
+    
+    let currentImageUrl = "";
+    let isAdminLogged = false;
+    
+    // ========== Firebase Configuration ==========
     const firebaseConfig = {
         apiKey: "AIzaSyDx3fYFDmhCtRiVwfAmArKFwY4hSRNOOVM",
         authDomain: "mr-potic.firebaseapp.com",
@@ -307,32 +385,8 @@
     // تهيئة Firebase
     firebase.initializeApp(firebaseConfig);
     const db = firebase.firestore();
-    // Cloudinary Configuration (استبدل ببياناتك)
-   const cloudName = "dogocjhft";
-const uploadPreset = "MR-POTIC";
-
-console.log("Cloud Name:", cloudName);
-console.log("Upload Preset:", uploadPreset);
-
-const widget = cloudinary.createUploadWidget(
-    { cloudName: cloudName, uploadPreset: uploadPreset },
-    (error, result) => {
-        if (result && result.event === "success") {
-            console.log("✅ تم الرفع بنجاح!", result.info.secure_url);
-        } else if (error) {
-            console.log("❌ خطأ:", error);
-        }
-    }
-);
-widget.open();
-    // بيانات المدير الثابتة
-    const ADMIN_EMAIL = "ahamdo64@gmail.com";
-    const ADMIN_PASSWORD = "12345678";
-
-    let currentImageUrl = "";
-    let isAdminLogged = false;
-
-    // ========== 1. المنتجات ==========
+    
+    // ========== 1. عرض المنتجات للزوار ==========
     async function loadProducts() {
         const container = document.getElementById("productsContainer");
         container.innerHTML = "⏳ جاري تحميل الأزياء...";
@@ -348,14 +402,15 @@ widget.open();
                 html += `<div class="product-card">
                             <img class="product-img" src="${p.imageUrl}" alt="${p.name}">
                             <div class="product-info">
-                                <h3>${p.name}</h3>
-                                <p class="desc">${p.description || "بدون وصف"}</p>
-                                <div class="price">${p.price}</div>
-                                <button class="book-btn" data-id="${doc.id}" data-name="${p.name}">📌 حجز المنتج</button>
+                                <h3>${escapeHtml(p.name)}</h3>
+                                <p class="desc">${escapeHtml(p.description || "بدون وصف")}</p>
+                                <div class="price">${escapeHtml(p.price)}</div>
+                                <button class="book-btn" data-id="${doc.id}" data-name="${escapeHtml(p.name)}">📌 حجز المنتج</button>
                             </div>
                         </div>`;
             });
             container.innerHTML = html;
+            
             document.querySelectorAll('.book-btn').forEach(btn => {
                 btn.addEventListener('click', () => initiateBooking(btn.dataset.id, btn.dataset.name));
             });
@@ -363,7 +418,8 @@ widget.open();
             container.innerHTML = "<p>حدث خطأ في تحميل المنتجات</p>";
         }
     }
-
+    
+    // ========== 2. الحجز ==========
     async function initiateBooking(productId, productName) {
         const name = prompt("📝 أدخل الاسم الكامل:");
         if(!name) return;
@@ -371,15 +427,16 @@ widget.open();
         if(!address) return;
         const phone = prompt("📞 أدخل رقم الهاتف:");
         if(!phone) return;
+        
         await db.collection("bookings").add({
             productId, productName, customerName: name, address, phone,
             status: "pending", 
             createdAt: firebase.firestore.FieldValue.serverTimestamp()
         });
-        alert("✅ تم استلام حجزك بنجاح! سيتم التواصل معك قريباً لتأكيد الحجز.");
+        alert("✅ تم استلام حجزك بنجاح! سيتم التواصل معك قريباً.");
     }
-
-    // ========== 2. العروض (ديناميكية) ==========
+    
+    // ========== 3. العروض ==========
     async function loadOffersForPublic() {
         const container = document.getElementById("offersContainer");
         try {
@@ -390,14 +447,14 @@ widget.open();
             }
             let html = "";
             snapshot.forEach(doc => {
-                html += `<div class="offer-item">🎁 ${doc.data().text}</div>`;
+                html += `<div class="offer-item">🎁 ${escapeHtml(doc.data().text)}</div>`;
             });
             container.innerHTML = html;
         } catch(e) {
             container.innerHTML = "<p>حدث خطأ في تحميل العروض</p>";
         }
     }
-
+    
     async function loadOffersForAdmin() {
         const container = document.getElementById("adminOffersList");
         try {
@@ -409,11 +466,12 @@ widget.open();
             let html = "";
             snapshot.forEach(doc => {
                 html += `<div class="offer-item">
-                            ${doc.data().text}
+                            ${escapeHtml(doc.data().text)}
                             <button class="deleteOfferBtn" data-id="${doc.id}" style="background:#a13e2d; padding:5px 15px;">🗑️ حذف</button>
                         </div>`;
             });
             container.innerHTML = html;
+            
             document.querySelectorAll('.deleteOfferBtn').forEach(btn => {
                 btn.addEventListener('click', async () => {
                     if(confirm("هل أنت متأكد من حذف هذا العرض؟")) {
@@ -425,8 +483,8 @@ widget.open();
             });
         } catch(e) {}
     }
-
-    // ========== 3. روابط التواصل (ظاهرة للجميع) ==========
+    
+    // ========== 4. روابط التواصل ==========
     async function loadSocialLinks() {
         try {
             const docSnap = await db.collection("settings").doc("socialLinks").get();
@@ -437,7 +495,6 @@ widget.open();
             if(data.email) icons += `<a href="mailto:${data.email}"><i class="fas fa-envelope fa-2x" style="margin:0 10px; color:#b45f2b"></i></a>`;
             document.getElementById("socialIcons").innerHTML = icons || "لا توجد روابط مضافه بعد";
             
-            // تعبئة حقول المدير إن وجدت
             if(document.getElementById("instaLink")) {
                 document.getElementById("instaLink").value = data.instagram || "";
                 document.getElementById("fbLink").value = data.facebook || "";
@@ -445,23 +502,93 @@ widget.open();
             }
         } catch(e) {}
     }
-
-    // حفظ روابط التواصل من لوحة المدير
-    document.getElementById("saveSocialBtn")?.addEventListener("click", async () => {
-        const insta = document.getElementById("instaLink").value;
-        const fb = document.getElementById("fbLink").value;
-        const email = document.getElementById("emailLink").value;
-        await db.collection("settings").doc("socialLinks").set({
-            instagram: insta,
-            facebook: fb,
-            email: email
-        });
-        alert("✅ تم حفظ روابط التواصل");
-        loadSocialLinks();
-    });
-
-    // ========== 4. المدير: رفع الصورة وحفظ المنتج ==========
+    
+    // ========== 5. إدارة المنتجات في لوحة المدير (تعديل/حذف) ==========
+    async function loadAdminProducts() {
+        const container = document.getElementById("adminProductsList");
+        if (!container) return;
+        
+        container.innerHTML = "⏳ جاري تحميل المنتجات...";
+        
+        try {
+            const snapshot = await db.collection("products").orderBy("timestamp", "desc").get();
+            if (snapshot.empty) {
+                container.innerHTML = "<p>لا توجد منتجات لعرضها.</p>";
+                return;
+            }
+            
+            let html = "";
+            snapshot.forEach(doc => {
+                const p = doc.data();
+                html += `
+                    <div class="admin-product-card">
+                        <img class="admin-product-img" src="${p.imageUrl}" alt="${p.name}">
+                        <div class="admin-product-info">
+                            <input type="text" id="name_${doc.id}" value="${escapeHtml(p.name)}" placeholder="اسم المنتج">
+                            <textarea id="desc_${doc.id}" rows="2" placeholder="المواصفات">${escapeHtml(p.description || "")}</textarea>
+                            <input type="text" id="price_${doc.id}" value="${escapeHtml(p.price)}" placeholder="السعر">
+                            <div class="btn-group">
+                                <button class="update-product-btn btn-update" data-id="${doc.id}">✏️ تحديث</button>
+                                <button class="delete-product-btn btn-delete" data-id="${doc.id}">🗑️ حذف</button>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            });
+            container.innerHTML = html;
+            
+            // أحداث التحديث
+            document.querySelectorAll('.update-product-btn').forEach(btn => {
+                btn.addEventListener('click', async () => {
+                    const id = btn.dataset.id;
+                    const newName = document.getElementById(`name_${id}`).value.trim();
+                    const newDesc = document.getElementById(`desc_${id}`).value.trim();
+                    const newPrice = document.getElementById(`price_${id}`).value.trim();
+                    
+                    if (!newName || !newPrice) {
+                        alert("الاسم والسعر مطلوبان");
+                        return;
+                    }
+                    
+                    await db.collection("products").doc(id).update({
+                        name: newName,
+                        description: newDesc,
+                        price: newPrice,
+                        updatedAt: firebase.firestore.FieldValue.serverTimestamp()
+                    });
+                    
+                    alert("✅ تم تحديث المنتج بنجاح");
+                    loadAdminProducts();
+                    loadProducts();
+                });
+            });
+            
+            // أحداث الحذف
+            document.querySelectorAll('.delete-product-btn').forEach(btn => {
+                btn.addEventListener('click', async () => {
+                    if(confirm("⚠️ هل أنت متأكد من حذف هذا المنتج؟")) {
+                        const id = btn.dataset.id;
+                        await db.collection("products").doc(id).delete();
+                        alert("🗑️ تم حذف المنتج بنجاح");
+                        loadAdminProducts();
+                        loadProducts();
+                    }
+                });
+            });
+            
+        } catch(error) {
+            console.error("خطأ في تحميل المنتجات:", error);
+            container.innerHTML = "<p style='color:red'>حدث خطأ في تحميل المنتجات</p>";
+        }
+    }
+    
+    // ========== 6. رفع الصورة إلى Cloudinary ==========
     document.getElementById("uploadImageBtn")?.addEventListener("click", () => {
+        if (typeof cloudinary === 'undefined') {
+            alert("مكتبة Cloudinary لم يتم تحميلها بعد، يرجى تحديث الصفحة.");
+            return;
+        }
+        
         const widget = cloudinary.createUploadWidget({ 
             cloudName: CLOUD_NAME, 
             uploadPreset: UPLOAD_PRESET, 
@@ -474,23 +601,28 @@ widget.open();
                 document.getElementById("imageUrlHidden").value = currentImageUrl;
             } else if(err) {
                 document.getElementById("uploadStatus").innerHTML = "❌ فشل الرفع";
+                document.getElementById("uploadStatus").style.color = "red";
             }
         });
         widget.open();
     });
-
+    
+    // ========== 7. حفظ المنتج الجديد ==========
     document.getElementById("saveProductBtn")?.addEventListener("click", async () => {
         const name = document.getElementById("productName").value.trim();
         const desc = document.getElementById("productDesc").value.trim();
         const price = document.getElementById("productPrice").value.trim();
+        
         if(!name || !price || !currentImageUrl) {
             alert("❌ يرجى إدخال اسم، سعر، ورفع صورة");
             return;
         }
+        
         await db.collection("products").add({
             name, description: desc, price, imageUrl: currentImageUrl,
             timestamp: firebase.firestore.FieldValue.serverTimestamp()
         });
+        
         alert("🎉 تم حفظ المنتج بنجاح");
         document.getElementById("productName").value = "";
         document.getElementById("productDesc").value = "";
@@ -499,15 +631,32 @@ widget.open();
         document.getElementById("imageUrlHidden").value = "";
         document.getElementById("uploadStatus").innerHTML = "";
         loadProducts();
+        loadAdminProducts();
     });
-
-    // ========== 5. الحجوزات ==========
+    
+    // ========== 8. إضافة عرض جديد ==========
+    document.getElementById("addOfferBtn")?.addEventListener("click", async () => {
+        const text = document.getElementById("newOfferText").value.trim();
+        if(!text) return alert("أدخل نص العرض");
+        
+        await db.collection("offers").add({
+            text: text,
+            createdAt: firebase.firestore.FieldValue.serverTimestamp()
+        });
+        
+        document.getElementById("newOfferText").value = "";
+        loadOffersForAdmin();
+        loadOffersForPublic();
+    });
+    
+    // ========== 9. عرض الحجوزات ==========
     document.getElementById("viewBookingsBtn")?.addEventListener("click", async () => {
         const snap = await db.collection("bookings").orderBy("createdAt","desc").get();
         if(snap.empty) {
             document.getElementById("bookingsList").innerHTML = "<p>📭 لا توجد حجوزات حتى الآن</p>";
             return;
         }
+        
         let html = `<table style="width:100%; border-collapse:collapse;">
                         <tr style="background:#f0e0d0;">
                             <th>العميل</th><th>المنتج</th><th>الهاتف</th><th>العنوان</th><th>الحالة</th><th>إجراء</th>
@@ -515,26 +664,43 @@ widget.open();
         snap.forEach(doc => {
             const b = doc.data();
             html += `<tr style="border-bottom:1px solid #ddd;">
-                        <td>${b.customerName}</td>
-                        <td>${b.productName}</td>
-                        <td>${b.phone}</td>
-                        <td>${b.address}</td>
+                        <td>${escapeHtml(b.customerName)}</td>
+                        <td>${escapeHtml(b.productName)}</td>
+                        <td>${escapeHtml(b.phone)}</td>
+                        <td>${escapeHtml(b.address)}</td>
                         <td>${b.status === "pending" ? "⏳ قيد الانتظار" : "✅ مؤكد"}</td>
                         <td>${b.status === "pending" ? `<button class="confirmBookingBtn" data-id="${doc.id}" style="background:#4c6a3b;">تأكيد</button>` : "تم التأكيد"}</td>
-                    </tr>`;
+                     </tr>`;
         });
-        html += `</table>`;
+        html += `<table>`;
         document.getElementById("bookingsList").innerHTML = html;
+        
         document.querySelectorAll(".confirmBookingBtn").forEach(btn => {
             btn.addEventListener("click", async () => {
                 await db.collection("bookings").doc(btn.dataset.id).update({ status: "confirmed" });
                 alert("✅ تم تأكيد الحجز");
-                document.getElementById("viewBookingsBtn").click(); // تحديث القائمة
+                document.getElementById("viewBookingsBtn").click();
             });
         });
     });
-
-    // ========== 6. تسجيل دخول المدير (تحقق مباشر) ==========
+    
+    // ========== 10. حفظ روابط التواصل ==========
+    document.getElementById("saveSocialBtn")?.addEventListener("click", async () => {
+        const insta = document.getElementById("instaLink").value;
+        const fb = document.getElementById("fbLink").value;
+        const email = document.getElementById("emailLink").value;
+        
+        await db.collection("settings").doc("socialLinks").set({
+            instagram: insta,
+            facebook: fb,
+            email: email
+        });
+        
+        alert("✅ تم حفظ روابط التواصل");
+        loadSocialLinks();
+    });
+    
+    // ========== 11. تسجيل دخول المدير ==========
     document.getElementById("doLoginBtn")?.addEventListener("click", () => {
         const email = document.getElementById("adminEmail").value;
         const pass = document.getElementById("adminPassword").value;
@@ -544,14 +710,15 @@ widget.open();
             document.getElementById("adminLogin").style.display = "none";
             document.getElementById("adminPanel").style.display = "block";
             document.getElementById("publicTabs").style.display = "none";
-            // تحميل بيانات خاصة بالمدير
             loadOffersForAdmin();
-            loadSocialLinks(); // لتحميل الروابط في حقول الإدارة
+            loadSocialLinks();
+            loadAdminProducts();
         } else {
             document.getElementById("loginError").innerText = "❌ بريد إلكتروني أو كلمة سر خاطئة";
         }
     });
-
+    
+    // ========== 12. تسجيل خروج ==========
     document.getElementById("logoutAdminBtn")?.addEventListener("click", () => {
         isAdminLogged = false;
         document.getElementById("adminPanel").style.display = "none";
@@ -562,13 +729,14 @@ widget.open();
         document.getElementById("loginError").innerText = "";
         switchTab("products");
     });
-
-    // ========== 7. تبديل التبويبات العامة ==========
+    
+    // ========== 13. تبديل التبويبات ==========
     function switchTab(tabId) {
         document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active-tab'));
         document.getElementById(tabId).classList.add('active-tab');
         document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
         document.querySelector(`.tab-btn[data-tab="${tabId}"]`).classList.add('active');
+        
         if(tabId === "products") loadProducts();
         if(tabId === "offers") loadOffersForPublic();
         if(tabId === "about") loadSocialLinks();
@@ -581,7 +749,18 @@ widget.open();
             }
         });
     });
-
+    
+    // ========== 14. دالة مساعدة لتنظيف النصوص ==========
+    function escapeHtml(str) {
+        if (!str) return "";
+        return str.replace(/[&<>]/g, function(m) {
+            if (m === '&') return '&amp;';
+            if (m === '<') return '&lt;';
+            if (m === '>') return '&gt;';
+            return m;
+        });
+    }
+    
     // ========== بدء التشغيل ==========
     loadProducts();
     loadOffersForPublic();
