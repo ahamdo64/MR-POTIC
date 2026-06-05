@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
     <meta charset="UTF-8">
@@ -305,9 +305,23 @@
     firebase.initializeApp(firebaseConfig);
     const db = firebase.firestore();
     // Cloudinary Configuration (استبدل ببياناتك)
-    const CLOUD_NAME = " dogocjhft";      // اسم Cloudinary
-    const UPLOAD_PRESET = "MR-POTIC"; // Upload Preset
+   const cloudName = "dogocjhft";
+const uploadPreset = "MR-POTIC";
 
+console.log("Cloud Name:", cloudName);
+console.log("Upload Preset:", uploadPreset);
+
+const widget = cloudinary.createUploadWidget(
+    { cloudName: cloudName, uploadPreset: uploadPreset },
+    (error, result) => {
+        if (result && result.event === "success") {
+            console.log("✅ تم الرفع بنجاح!", result.info.secure_url);
+        } else if (error) {
+            console.log("❌ خطأ:", error);
+        }
+    }
+);
+widget.open();
     // بيانات المدير الثابتة
     const ADMIN_EMAIL = "ahamdo64@gmail.com";
     const ADMIN_PASSWORD = "12345678";
