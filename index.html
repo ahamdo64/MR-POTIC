@@ -1,0 +1,574 @@
+﻿<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>M.R بوتيك - مدام ريم</title>
+    <!-- Firebase SDKs -->
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore-compat.js"></script>
+    <!-- Cloudinary Widget -->
+    <script src="https://upload-widget.cloudinary.com/global/all.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Tajawal', sans-serif;
+        }
+        body {
+            background: linear-gradient(145deg, #fff5f0 0%, #ffe8e0 100%);
+            color: #3e2a2a;
+        }
+        .navbar {
+            background: #2c1a12;
+            padding: 1rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.1);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+        .logo {
+            font-size: 1.8rem;
+            font-weight: bold;
+            color: #f7c873;
+        }
+        .logo span {
+            color: #e6b17e;
+            font-size: 1rem;
+        }
+        .nav-tabs {
+            display: flex;
+            gap: 1rem;
+            flex-wrap: wrap;
+        }
+        .tab-btn {
+            background: none;
+            border: none;
+            color: #f3e1cf;
+            font-size: 1rem;
+            font-weight: 500;
+            cursor: pointer;
+            padding: 0.5rem 1rem;
+            border-radius: 40px;
+            transition: 0.3s;
+        }
+        .tab-btn.active, .tab-btn:hover {
+            background: #f7c873;
+            color: #2c1a12;
+        }
+        .tab-content {
+            display: none;
+            padding: 2rem;
+            animation: fade 0.3s ease;
+        }
+        .tab-content.active-tab {
+            display: block;
+        }
+        @keyframes fade {
+            from { opacity: 0; transform: translateY(8px);}
+            to { opacity: 1; transform: translateY(0);}
+        }
+        .products-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 2rem;
+            margin-top: 1rem;
+        }
+        .product-card {
+            background: white;
+            border-radius: 28px;
+            overflow: hidden;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+            transition: 0.2s;
+        }
+        .product-card:hover {
+            transform: translateY(-5px);
+        }
+        .product-img {
+            width: 100%;
+            height: 260px;
+            object-fit: cover;
+        }
+        .product-info {
+            padding: 1rem;
+        }
+        .price {
+            color: #b45f2b;
+            font-size: 1.3rem;
+            font-weight: bold;
+        }
+        .book-btn {
+            background: #2c1a12;
+            color: #f7c873;
+            border: none;
+            padding: 8px;
+            border-radius: 50px;
+            width: 100%;
+            margin-top: 8px;
+            cursor: pointer;
+            font-weight: bold;
+        }
+        .form-card, .admin-panel {
+            background: white;
+            padding: 2rem;
+            border-radius: 32px;
+            max-width: 700px;
+            margin: 1rem auto;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.05);
+        }
+        input, textarea {
+            width: 100%;
+            padding: 10px;
+            margin: 8px 0;
+            border-radius: 50px;
+            border: 1px solid #ddd;
+        }
+        button {
+            background: #b45f2b;
+            color: white;
+            border: none;
+            padding: 10px 18px;
+            border-radius: 40px;
+            cursor: pointer;
+            font-weight: bold;
+        }
+        .login-box {
+            max-width: 400px;
+            margin: 3rem auto;
+            text-align: center;
+        }
+        .logout-btn {
+            background: #7a3e1a;
+            margin-right: 10px;
+        }
+        footer {
+            text-align: center;
+            padding: 1.5rem;
+            background: #2c1a12;
+            color: #dfc3a6;
+        }
+        .offer-item {
+            background: #fef2e6;
+            padding: 1rem;
+            border-radius: 28px;
+            margin-bottom: 1rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .admin-badge {
+            background: #f7c873;
+            color: #2c1a12;
+            padding: 5px 12px;
+            border-radius: 30px;
+            font-size: 0.8rem;
+        }
+        @media (max-width: 700px) {
+            .navbar { flex-direction: column; gap: 10px; }
+        }
+    </style>
+</head>
+<body>
+
+<div class="navbar">
+    <div class="logo">M.R <span>بوتيك مدام ريم</span></div>
+    <div class="nav-tabs" id="publicTabs">
+        <button class="tab-btn active" data-tab="products">🛍️ المنتجات</button>
+        <button class="tab-btn" data-tab="about">👩‍💼 عن البوتيك</button>
+        <button class="tab-btn" data-tab="services">✨ الخدمات</button>
+        <button class="tab-btn" data-tab="offers">🎁 العروض</button>
+        <button class="tab-btn" data-tab="adminLogin" id="adminLoginTab">🔐 دخول المدير</button>
+    </div>
+</div>
+
+<!-- تبويب المنتجات -->
+<div id="products" class="tab-content active-tab">
+    <h2>🛍️ تشكيلتنا</h2>
+    <div id="productsContainer" class="products-grid">جاري التحميل...</div>
+</div>
+
+<!-- تبويب عن البوتيك (مع روابط التواصل ظاهرة للجميع) -->
+<div id="about" class="tab-content">
+    <div class="form-card">
+        <h2>🌸 بوتيك M.R - مدام ريم</h2>
+        <p><i class="fas fa-map-marker-alt"></i> <strong>العنوان:</strong> طرطوس - الحمرات</p>
+        <p><i class="fas fa-phone-alt"></i> <strong>الهاتف:</strong> 0988324883</p>
+        <p><strong>📖 قصتنا:</strong> أرقى الموديلات والتصاميم الفاخرة بلمسة عصرية وأناقة لا تضاهى.</p>
+        <div id="socialLinksDisplay">
+            <h3>تابعينا على:</h3>
+            <div id="socialIcons"></div>
+        </div>
+    </div>
+</div>
+
+<!-- تبويب الخدمات -->
+<div id="services" class="tab-content">
+    <div class="form-card">
+        <h2>⭐ خدمات وتسهيلات</h2>
+        <ul style="margin-right: 1.5rem;">
+            <li>🚚 توصيل سريع لجميع المناطق</li>
+            <li>🔄 تبديل مجاني خلال 3 أيام</li>
+            <li>💳 تسهيلات دفع: كاش، بطاقات، محفظة إلكترونية</li>
+            <li>👗 غرفة قياس خاصة VIP</li>
+            <li>🎁 تغليف هدايا مجاني</li>
+        </ul>
+    </div>
+</div>
+
+<!-- تبويب العروض (ديناميكية من المدير) -->
+<div id="offers" class="tab-content">
+    <div class="form-card">
+        <h2>🎉 عروضنا الحالية</h2>
+        <div id="offersContainer">جاري تحميل العروض...</div>
+    </div>
+</div>
+
+<!-- تبويب دخول المدير (نموذج تسجيل الدخول) -->
+<div id="adminLogin" class="tab-content">
+    <div class="login-box form-card">
+        <h2>🔐 دخول المدير</h2>
+        <input type="email" id="adminEmail" placeholder="البريد الإلكتروني">
+        <input type="password" id="adminPassword" placeholder="كلمة المرور">
+        <button id="doLoginBtn">تسجيل الدخول</button>
+        <p id="loginError" style="color:red; margin-top:10px;"></p>
+    </div>
+</div>
+
+<!-- لوحة المدير المخفية حتى تسجيل الدخول -->
+<div id="adminPanel" style="display:none;">
+    <div class="navbar" style="background:#4a2a1a;">
+        <div class="logo">🛠️ لوحة إدارة M.R</div>
+        <button id="logoutAdminBtn" class="logout-btn">🚪 تسجيل خروج</button>
+    </div>
+    <div style="padding:2rem">
+        <div class="admin-panel">
+            <h2><i class="fas fa-upload"></i> رفع منتج جديد</h2>
+            <input type="text" id="productName" placeholder="اسم المنتج" required>
+            <textarea id="productDesc" placeholder="مواصفات المنتج (قماش، مقاس، لون...)" rows="2"></textarea>
+            <input type="text" id="productPrice" placeholder="السعر (ل.س أو دولار)" required>
+            <button id="uploadImageBtn">📸 رفع صورة إلى Cloudinary</button>
+            <p id="uploadStatus" style="font-size:0.9rem;"></p>
+            <input type="hidden" id="imageUrlHidden">
+            <button id="saveProductBtn" style="background:#4c6a3b;">💾 حفظ المنتج</button>
+        </div>
+
+        <div class="admin-panel">
+            <h2><i class="fas fa-tags"></i> إدارة العروض (إضافة / حذف)</h2>
+            <div id="adminOffersList"></div>
+            <div style="display:flex; gap:10px; margin-top:15px;">
+                <input type="text" id="newOfferText" placeholder="نص العرض الجديد" style="flex:1">
+                <button id="addOfferBtn">➕ إضافة عرض</button>
+            </div>
+        </div>
+
+        <div class="admin-panel">
+            <h2><i class="fas fa-calendar-check"></i> إدارة الحجوزات</h2>
+            <button id="viewBookingsBtn">📋 عرض جميع الحجوزات</button>
+            <div id="bookingsList" style="margin-top:15px;"></div>
+        </div>
+
+        <div class="admin-panel">
+            <h2><i class="fas fa-link"></i> تعديل روابط التواصل الاجتماعي</h2>
+            <input type="url" id="instaLink" placeholder="رابط الانستغرام">
+            <input type="url" id="fbLink" placeholder="رابط الفيسبوك">
+            <input type="email" id="emailLink" placeholder="البريد الإلكتروني">
+            <button id="saveSocialBtn">💾 حفظ الروابط</button>
+        </div>
+    </div>
+</div>
+
+<footer>
+    <p>M.R بوتيك - طرطوس الحمرات | جميع الحقوق محفوظة © 2025</p>
+</footer>
+
+<script>
+        // ========== Firebase Configuration ==========
+    const firebaseConfig = {
+        apiKey: "AIzaSyDx3fYFDmhCtRiVwfAmArKFwY4hSRNOOVM",
+        authDomain: "mr-potic.firebaseapp.com",
+        databaseURL: "https://mr-potic-default-rtdb.firebaseio.com",
+        projectId: "mr-potic",
+        storageBucket: "mr-potic.firebasestorage.app",
+        messagingSenderId: "8338243351",
+        appId: "1:8338243351:web:14bf938be505063541c152",
+        measurementId: "G-VXQMQS4S4Q"
+    };
+    
+    // تهيئة Firebase
+    firebase.initializeApp(firebaseConfig);
+    const db = firebase.firestore();
+    // Cloudinary Configuration (استبدل ببياناتك)
+    const CLOUD_NAME = " dogocjhft";      // اسم Cloudinary
+    const UPLOAD_PRESET = "MR-POTIC"; // Upload Preset
+
+    // بيانات المدير الثابتة
+    const ADMIN_EMAIL = "ahamdo64@gmail.com";
+    const ADMIN_PASSWORD = "12345678";
+
+    let currentImageUrl = "";
+    let isAdminLogged = false;
+
+    // ========== 1. المنتجات ==========
+    async function loadProducts() {
+        const container = document.getElementById("productsContainer");
+        container.innerHTML = "⏳ جاري تحميل الأزياء...";
+        try {
+            const snapshot = await db.collection("products").orderBy("timestamp", "desc").get();
+            if (snapshot.empty) {
+                container.innerHTML = "<p>✨ لا توجد منتجات حالياً، تواصلي مع المدير لإضافة تشكيلات جديدة.</p>";
+                return;
+            }
+            let html = "";
+            snapshot.forEach(doc => {
+                const p = doc.data();
+                html += `<div class="product-card">
+                            <img class="product-img" src="${p.imageUrl}" alt="${p.name}">
+                            <div class="product-info">
+                                <h3>${p.name}</h3>
+                                <p class="desc">${p.description || "بدون وصف"}</p>
+                                <div class="price">${p.price}</div>
+                                <button class="book-btn" data-id="${doc.id}" data-name="${p.name}">📌 حجز المنتج</button>
+                            </div>
+                        </div>`;
+            });
+            container.innerHTML = html;
+            document.querySelectorAll('.book-btn').forEach(btn => {
+                btn.addEventListener('click', () => initiateBooking(btn.dataset.id, btn.dataset.name));
+            });
+        } catch(e) {
+            container.innerHTML = "<p>حدث خطأ في تحميل المنتجات</p>";
+        }
+    }
+
+    async function initiateBooking(productId, productName) {
+        const name = prompt("📝 أدخل الاسم الكامل:");
+        if(!name) return;
+        const address = prompt("🏠 أدخل العنوان الكامل:");
+        if(!address) return;
+        const phone = prompt("📞 أدخل رقم الهاتف:");
+        if(!phone) return;
+        await db.collection("bookings").add({
+            productId, productName, customerName: name, address, phone,
+            status: "pending", 
+            createdAt: firebase.firestore.FieldValue.serverTimestamp()
+        });
+        alert("✅ تم استلام حجزك بنجاح! سيتم التواصل معك قريباً لتأكيد الحجز.");
+    }
+
+    // ========== 2. العروض (ديناميكية) ==========
+    async function loadOffersForPublic() {
+        const container = document.getElementById("offersContainer");
+        try {
+            const snapshot = await db.collection("offers").orderBy("createdAt", "desc").get();
+            if(snapshot.empty) {
+                container.innerHTML = "<p>لا توجد عروض حالياً، تابعونا قريباً.</p>";
+                return;
+            }
+            let html = "";
+            snapshot.forEach(doc => {
+                html += `<div class="offer-item">🎁 ${doc.data().text}</div>`;
+            });
+            container.innerHTML = html;
+        } catch(e) {
+            container.innerHTML = "<p>حدث خطأ في تحميل العروض</p>";
+        }
+    }
+
+    async function loadOffersForAdmin() {
+        const container = document.getElementById("adminOffersList");
+        try {
+            const snapshot = await db.collection("offers").orderBy("createdAt", "desc").get();
+            if(snapshot.empty) {
+                container.innerHTML = "<p>لا توجد عروض. أضف عرضاً جديداً.</p>";
+                return;
+            }
+            let html = "";
+            snapshot.forEach(doc => {
+                html += `<div class="offer-item">
+                            ${doc.data().text}
+                            <button class="deleteOfferBtn" data-id="${doc.id}" style="background:#a13e2d; padding:5px 15px;">🗑️ حذف</button>
+                        </div>`;
+            });
+            container.innerHTML = html;
+            document.querySelectorAll('.deleteOfferBtn').forEach(btn => {
+                btn.addEventListener('click', async () => {
+                    if(confirm("هل أنت متأكد من حذف هذا العرض؟")) {
+                        await db.collection("offers").doc(btn.dataset.id).delete();
+                        loadOffersForAdmin();
+                        loadOffersForPublic();
+                    }
+                });
+            });
+        } catch(e) {}
+    }
+
+    // ========== 3. روابط التواصل (ظاهرة للجميع) ==========
+    async function loadSocialLinks() {
+        try {
+            const docSnap = await db.collection("settings").doc("socialLinks").get();
+            const data = docSnap.exists ? docSnap.data() : { instagram: "", facebook: "", email: "mr@boutique.com" };
+            let icons = "";
+            if(data.instagram) icons += `<a href="${data.instagram}" target="_blank"><i class="fab fa-instagram fa-2x" style="margin:0 10px; color:#c13584"></i></a>`;
+            if(data.facebook) icons += `<a href="${data.facebook}" target="_blank"><i class="fab fa-facebook fa-2x" style="margin:0 10px; color:#4267B2"></i></a>`;
+            if(data.email) icons += `<a href="mailto:${data.email}"><i class="fas fa-envelope fa-2x" style="margin:0 10px; color:#b45f2b"></i></a>`;
+            document.getElementById("socialIcons").innerHTML = icons || "لا توجد روابط مضافه بعد";
+            
+            // تعبئة حقول المدير إن وجدت
+            if(document.getElementById("instaLink")) {
+                document.getElementById("instaLink").value = data.instagram || "";
+                document.getElementById("fbLink").value = data.facebook || "";
+                document.getElementById("emailLink").value = data.email || "";
+            }
+        } catch(e) {}
+    }
+
+    // حفظ روابط التواصل من لوحة المدير
+    document.getElementById("saveSocialBtn")?.addEventListener("click", async () => {
+        const insta = document.getElementById("instaLink").value;
+        const fb = document.getElementById("fbLink").value;
+        const email = document.getElementById("emailLink").value;
+        await db.collection("settings").doc("socialLinks").set({
+            instagram: insta,
+            facebook: fb,
+            email: email
+        });
+        alert("✅ تم حفظ روابط التواصل");
+        loadSocialLinks();
+    });
+
+    // ========== 4. المدير: رفع الصورة وحفظ المنتج ==========
+    document.getElementById("uploadImageBtn")?.addEventListener("click", () => {
+        const widget = cloudinary.createUploadWidget({ 
+            cloudName: CLOUD_NAME, 
+            uploadPreset: UPLOAD_PRESET, 
+            sources: ['local', 'camera']
+        }, (err, res) => {
+            if(!err && res.event === "success") {
+                currentImageUrl = res.info.secure_url;
+                document.getElementById("uploadStatus").innerHTML = "✅ تم رفع الصورة بنجاح";
+                document.getElementById("uploadStatus").style.color = "green";
+                document.getElementById("imageUrlHidden").value = currentImageUrl;
+            } else if(err) {
+                document.getElementById("uploadStatus").innerHTML = "❌ فشل الرفع";
+            }
+        });
+        widget.open();
+    });
+
+    document.getElementById("saveProductBtn")?.addEventListener("click", async () => {
+        const name = document.getElementById("productName").value.trim();
+        const desc = document.getElementById("productDesc").value.trim();
+        const price = document.getElementById("productPrice").value.trim();
+        if(!name || !price || !currentImageUrl) {
+            alert("❌ يرجى إدخال اسم، سعر، ورفع صورة");
+            return;
+        }
+        await db.collection("products").add({
+            name, description: desc, price, imageUrl: currentImageUrl,
+            timestamp: firebase.firestore.FieldValue.serverTimestamp()
+        });
+        alert("🎉 تم حفظ المنتج بنجاح");
+        document.getElementById("productName").value = "";
+        document.getElementById("productDesc").value = "";
+        document.getElementById("productPrice").value = "";
+        currentImageUrl = "";
+        document.getElementById("imageUrlHidden").value = "";
+        document.getElementById("uploadStatus").innerHTML = "";
+        loadProducts();
+    });
+
+    // ========== 5. الحجوزات ==========
+    document.getElementById("viewBookingsBtn")?.addEventListener("click", async () => {
+        const snap = await db.collection("bookings").orderBy("createdAt","desc").get();
+        if(snap.empty) {
+            document.getElementById("bookingsList").innerHTML = "<p>📭 لا توجد حجوزات حتى الآن</p>";
+            return;
+        }
+        let html = `<table style="width:100%; border-collapse:collapse;">
+                        <tr style="background:#f0e0d0;">
+                            <th>العميل</th><th>المنتج</th><th>الهاتف</th><th>العنوان</th><th>الحالة</th><th>إجراء</th>
+                        </tr>`;
+        snap.forEach(doc => {
+            const b = doc.data();
+            html += `<tr style="border-bottom:1px solid #ddd;">
+                        <td>${b.customerName}</td>
+                        <td>${b.productName}</td>
+                        <td>${b.phone}</td>
+                        <td>${b.address}</td>
+                        <td>${b.status === "pending" ? "⏳ قيد الانتظار" : "✅ مؤكد"}</td>
+                        <td>${b.status === "pending" ? `<button class="confirmBookingBtn" data-id="${doc.id}" style="background:#4c6a3b;">تأكيد</button>` : "تم التأكيد"}</td>
+                    </tr>`;
+        });
+        html += `</table>`;
+        document.getElementById("bookingsList").innerHTML = html;
+        document.querySelectorAll(".confirmBookingBtn").forEach(btn => {
+            btn.addEventListener("click", async () => {
+                await db.collection("bookings").doc(btn.dataset.id).update({ status: "confirmed" });
+                alert("✅ تم تأكيد الحجز");
+                document.getElementById("viewBookingsBtn").click(); // تحديث القائمة
+            });
+        });
+    });
+
+    // ========== 6. تسجيل دخول المدير (تحقق مباشر) ==========
+    document.getElementById("doLoginBtn")?.addEventListener("click", () => {
+        const email = document.getElementById("adminEmail").value;
+        const pass = document.getElementById("adminPassword").value;
+        
+        if(email === ADMIN_EMAIL && pass === ADMIN_PASSWORD) {
+            isAdminLogged = true;
+            document.getElementById("adminLogin").style.display = "none";
+            document.getElementById("adminPanel").style.display = "block";
+            document.getElementById("publicTabs").style.display = "none";
+            // تحميل بيانات خاصة بالمدير
+            loadOffersForAdmin();
+            loadSocialLinks(); // لتحميل الروابط في حقول الإدارة
+        } else {
+            document.getElementById("loginError").innerText = "❌ بريد إلكتروني أو كلمة سر خاطئة";
+        }
+    });
+
+    document.getElementById("logoutAdminBtn")?.addEventListener("click", () => {
+        isAdminLogged = false;
+        document.getElementById("adminPanel").style.display = "none";
+        document.getElementById("publicTabs").style.display = "flex";
+        document.getElementById("adminLogin").style.display = "block";
+        document.getElementById("adminEmail").value = "";
+        document.getElementById("adminPassword").value = "";
+        document.getElementById("loginError").innerText = "";
+        switchTab("products");
+    });
+
+    // ========== 7. تبديل التبويبات العامة ==========
+    function switchTab(tabId) {
+        document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active-tab'));
+        document.getElementById(tabId).classList.add('active-tab');
+        document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+        document.querySelector(`.tab-btn[data-tab="${tabId}"]`).classList.add('active');
+        if(tabId === "products") loadProducts();
+        if(tabId === "offers") loadOffersForPublic();
+        if(tabId === "about") loadSocialLinks();
+    }
+    
+    document.querySelectorAll('.tab-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+            if(!isAdminLogged) {
+                switchTab(btn.dataset.tab);
+            }
+        });
+    });
+
+    // ========== بدء التشغيل ==========
+    loadProducts();
+    loadOffersForPublic();
+    loadSocialLinks();
+</script>
+</body>
+</html>
